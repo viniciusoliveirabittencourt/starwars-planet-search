@@ -1,14 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function TableBody({ arrayPlanets }) {
-    const array = Object.keys(arrayPlanets);
-    const index = array.indexOf('residents');
-    array.splice(index, 1);
   return (
     <tr>
-      { Object.values(arrayPlanets).map((infoPlanet) => <td>{ infoPlanet }</td>) }
+      { Object.values(arrayPlanets)
+        .map((infoPlanet, index) => <td key={ index }>{ infoPlanet }</td>) }
     </tr>
   );
 }
+
+TableBody.propTypes = {
+  arrayPlanets: PropTypes.arrayOf().isRequired,
+};
 
 export default TableBody;
