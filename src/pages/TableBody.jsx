@@ -11,7 +11,7 @@ function TableBody({ arrayPlanets }) {
 }
 
 TableBody.propTypes = {
-  arrayPlanets: PropTypes.arrayOf().isRequired,
+  arrayPlanets: PropTypes.shape().isRequired,
 };
 
 export default TableBody;
