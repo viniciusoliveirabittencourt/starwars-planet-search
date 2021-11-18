@@ -6,7 +6,9 @@ function Table() {
   const [planets, setPlanets] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [array, setArray] = useState([]);
-  const { filters: { filterByName: { name }, filterByNumericValues } } = useContext(contextApi);
+  const { filters: { filterByName: { name },
+    filterByNumericValues,
+  } } = useContext(contextApi);
 
   useEffect(() => {
     fetch('https://swapi-trybe.herokuapp.com/api/planets/')
@@ -23,25 +25,26 @@ function Table() {
   }, []);
 
   useEffect(() => {
-    const arrayVar = array.filter((elementTwo) => {
-      switch (filterByNumericValues[filterByNumericValues.length - 1].comparison) {
-        case 'maior que': 
-          return parseInt(elementTwo[filterByNumericValues[filterByNumericValues.length - 1].column]) > parseInt(filterByNumericValues[filterByNumericValues.length - 1].value);
+    filterByNumericValues.forEach((element) => {
+      const arrayVar = array.filter((elementTwo) => {
+        switch (element.comparison) {
+        case 'maior que':
+          return parseInt(elementTwo[element.column], 10) > parseInt(element.value, 10);
         case 'menor que':
-          return parseInt(elementTwo[filterByNumericValues[filterByNumericValues.length - 1].column]) < parseInt(filterByNumericValues[filterByNumericValues.length - 1].value);
+          return parseInt(elementTwo[element.column], 10) < parseInt(element.value, 10);
         case 'igual a':
-          return parseInt(elementTwo[filterByNumericValues[filterByNumericValues.length - 1].column]) === parseInt(filterByNumericValues[filterByNumericValues.length - 1].value);
+          return parseInt(elementTwo[element.column], 10) === parseInt(element.value, 10);
         default:
-          console.error('WHTF MAN DNV ?');
-          break;
-      }
+          return console.error('Man para com isso');
+        }
+      });
+      setArray(arrayVar);
     });
-    setArray(arrayVar);
-  }, [filterByNumericValues])
+  }, [filterByNumericValues]);
 
   const THeadInfor = () => {
-    const array = Object.keys(planets[0]);
-    return array;
+    const arrayObject = Object.keys(planets[0]);
+    return arrayObject;
   };
 
   const bodyTablePlanets = () => {
@@ -54,16 +57,15 @@ function Table() {
           />))
           .filter((planet) => planet.key.includes(name))
       );
-    } else {
-      return (
-        array.map((element) => (<TableBody
-          key={ element.name }
-          arrayPlanets={ element }
-        />))
-        .filter((planet) => planet.key.includes(name))
-      );
     }
-  }
+    return (
+      array.map((infoTable) => (<TableBody
+        key={ infoTable.name }
+        arrayPlanets={ infoTable }
+      />))
+        .filter((planet) => planet.key.includes(name))
+    );
+  };
 
   const bodyTable = () => (
     <table>
