@@ -7,7 +7,6 @@ function Table() {
   const [carregando, setCarregando] = useState(true);
   const [array, setArray] = useState([]);
   const { filters: { filterByName: { name }, filterByNumericValues } } = useContext(contextApi);
-  console.log(filterByNumericValues);
 
   useEffect(() => {
     fetch('https://swapi-trybe.herokuapp.com/api/planets/')
@@ -38,7 +37,6 @@ function Table() {
       }
     });
     setArray(arrayVar);
-    console.log(array);
   }, [filterByNumericValues])
 
   const THeadInfor = () => {

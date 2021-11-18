@@ -4,12 +4,13 @@ import Table from './pages/Table';
 import MyContext from './contextApi/contextApi';
 
 function App() {
+  const [arrayFiltros, setArrayFiltros] = useState(['population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
   const [inputNamePlanet, setInputNamePlanet] = useState('');
   const [inputTypeSelectorNumber, setInputTypeSelectorNumber] = useState('population');
   const [inputMaiorMenorIgual, setInputMaiorMenorIgual] = useState('maior que');
   const [inputNumber, setInputNumber] = useState('0');
   const [filterByNumbers, setFilterByNumbers] = useState([]);
-  const arrayFiltros = ['population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
+  console.log(inputTypeSelectorNumber);
 
   const handleInputs = ({ target }) => {
     const { value, id } = target;
@@ -52,6 +53,10 @@ function App() {
   const onClick = () => {
     if (veryfyInptuTextOnlyNumbers()) {
       setFilterByNumbers([...filterByNumbers, { column: inputTypeSelectorNumber, comparison: inputMaiorMenorIgual, value: inputNumber }]);
+      const index = arrayFiltros.indexOf(inputTypeSelectorNumber);
+      arrayFiltros.splice(index, 1);
+      setArrayFiltros(arrayFiltros);
+      setInputTypeSelectorNumber(arrayFiltros[0]);
     } else {
       const span = document.getElementById('ValidaNumber');
       span.style.display = 'inline';
@@ -60,19 +65,37 @@ function App() {
   };
 
   const bodySelectNumber = () => {
-      return (
-          <form>
-            { selectFilter() }
-            <select data-testid='comparison-filter' onChange={ handleInputs } id="MaiorMenorIgual" value={ inputMaiorMenorIgual }>
-              <option value="maior que">maior que</option>
-              <option value="menor que">menor que</option>
-              <option value="igual a">igual a</option>
-            </select>
-            <input data-testid='value-filter' onChange={ handleInputs } id="ValueNumber" value={ inputNumber } type="text"/>
-            <span id="ValidaNumber" style={{ display: 'none' }}>Pf coloque apenas numeros</span>
-            <button onClick={ onClick } data-testid='button-filter' type="button">Filtrar!</button>
-          </form>
-      );
+    return (
+      <form>
+        { selectFilter() }
+        <select data-testid='comparison-filter' onChange={ handleInputs } id="MaiorMenorIgual" value={ inputMaiorMenorIgual }>
+          <option value="maior que">maior que</option>
+          <option value="menor que">menor que</option>
+          <option value="igual a">igual a</option>
+        </select>
+        <input data-testid='value-filter' onChange={ handleInputs } id="ValueNumber" value={ inputNumber } type="text"/>
+        <span id="ValidaNumber" style={{ display: 'none' }}>Pf coloque apenas numeros</span>
+        <button onClick={ onClick } data-testid='button-filter' type="button">Filtrar!</button>
+      </form>
+  );
+  }
+
+  const oldSelects = () => {
+  return (
+    filterByNumbers.map((element) => (
+      console.log(element),
+      <form key={ element.column }>
+        <select>
+          <option>{ element.column }</option>
+        </select>
+        <select>
+          <option>{ element.comparison }</option>
+        </select>
+        <input id="ValueNumber" defaultValue={ element.value } type="text"/>
+        <span id="ValidaNumber" style={{ display: 'none' }}>Pf coloque apenas numeros</span>
+        <button disabled={ true } onClick={ onClick } data-testid='button-filter' type="button">Filtrar!</button>
+      </form>
+    )));
   }
 
   const objContext = {
@@ -93,6 +116,7 @@ function App() {
         data-testid="name-filter"
         value={ inputNamePlanet }
       />
+      { filterByNumbers.length === 0 ? '' : oldSelects() }
       { bodySelectNumber() }
       <Table />
     </MyContext.Provider>
