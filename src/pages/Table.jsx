@@ -25,6 +25,7 @@ function Table() {
   }, []);
 
   useEffect(() => {
+    setArray(planets);
     filterByNumericValues.forEach((element) => {
       const arrayVar = array.filter((elementTwo) => {
         switch (element.comparison) {
@@ -40,7 +41,7 @@ function Table() {
       });
       setArray(arrayVar);
     });
-  }, [filterByNumericValues]);
+  }, [array, filterByNumericValues, planets]);
 
   const THeadInfor = () => {
     const arrayObject = Object.keys(planets[0]);
