@@ -4,10 +4,8 @@ import Table from './pages/Table';
 import MyContext from './contextApi/contextApi';
 
 function App() {
-  const [arrayFiltros] = useState(['population',
-    'orbital_period',
-    'diameter',
-    'rotation_period',
+  const [arrayFiltros] = useState(['population', 'orbital_period',
+    'diameter', 'rotation_period',
     'surface_water',
   ]);
   const [inputNamePlanet, setInputNamePlanet] = useState('');
@@ -117,7 +115,7 @@ function App() {
 
   const onClickSort = () => {
     setObjSort({ column: columSort, sort: asdDesc });
-  }
+  };
 
   const bodySelectNumber = () => (
     <form>
@@ -202,25 +200,46 @@ function App() {
       />
       { filterByNumbers.length === 0 ? '' : oldSelects() }
       { bodySelectNumber() }
-      <select data-testid='column-sort' id="modfiSort" onChange={ handleInputs }>
+      <select data-testid="column-sort" id="modfiSort" onChange={ handleInputs }>
         <option value="name">name</option>
         { arrayFiltros.map((element) => (
-        <option
-          key={ element }
-          value={ element }
-        >
-          { element }
-        </option>)) }
+          <option
+            key={ element }
+            value={ element }
+          >
+            { element }
+          </option>)) }
       </select>
       <label htmlFor="Asc">
         Ascendente
-        <input data-testid='column-sort-input-asc' onClick={ handleInputs } id="Asc" value="ASC" type="radio" name="ascdsc" defaultChecked={ true }/>
+        <input
+          data-testid="column-sort-input-asc"
+          onClick={ handleInputs }
+          id="Asc"
+          value="ASC"
+          type="radio"
+          name="ascdsc"
+          defaultChecked
+        />
       </label>
       <label htmlFor="Desc">
         Descendente
-        <input data-testid="column-sort-input-desc" onClick={ handleInputs } id="Desc" value="DESC" type="radio" name="ascdsc"/>
+        <input
+          data-testid="column-sort-input-desc"
+          onClick={ handleInputs }
+          id="Desc"
+          value="DESC"
+          type="radio"
+          name="ascdsc"
+        />
       </label>
-      <button data-testid='column-sort-button' data-testid='column-sort-button' onClick={ onClickSort }>Ordernar!</button>
+      <button
+        data-testid="column-sort-button"
+        onClick={ onClickSort }
+        type="button"
+      >
+        Ordernar!
+      </button>
       <Table />
     </MyContext.Provider>
   );

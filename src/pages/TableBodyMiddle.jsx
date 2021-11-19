@@ -29,10 +29,10 @@ function TableBodyMiddle({ arrayPlanets }) {
 
   return (
     array.map((infoTable) => (<TableBody
-        key={ infoTable.name }
-        arrayPlanets={ infoTable }
-      />))
-        .filter((planet) => planet.key.includes(name))
+      key={ infoTable.name }
+      arrayPlanets={ infoTable }
+    />))
+      .filter((planet) => planet.key.includes(name))
   );
 }
 
