@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-import TableBody from './TableBody';
 import contextApi from '../contextApi/contextApi';
+import TableBodyMiddle from './TableBodyMiddle';
 
 function Table() {
+  const { filters:{ order } } = useContext(contextApi);
   const [planets, setPlanets] = useState([]);
   const [carregando, setCarregando] = useState(true);
-  const [array, setArray] = useState([]);
-  const { filters: { filterByName: { name },
-    filterByNumericValues,
-  } } = useContext(contextApi);
+  console.log(planets);
 
   useEffect(() => {
     fetch('https://swapi-trybe.herokuapp.com/api/planets/')
@@ -18,54 +16,101 @@ function Table() {
           delete element.residents;
         });
         setPlanets(results);
-        setArray(results);
       })
-      .then(() => setCarregando(false))
+      .then(() => {
+        setCarregando(false);
+      })
       .catch((error) => console.error(error));
   }, []);
 
-  useEffect(() => {
-    setArray(planets);
-    filterByNumericValues.forEach((element) => {
-      const arrayVar = array.filter((elementTwo) => {
-        switch (element.comparison) {
-        case 'maior que':
-          return parseInt(elementTwo[element.column], 10) > parseInt(element.value, 10);
-        case 'menor que':
-          return parseInt(elementTwo[element.column], 10) < parseInt(element.value, 10);
-        case 'igual a':
-          return parseInt(elementTwo[element.column], 10) === parseInt(element.value, 10);
-        default:
-          return console.error('Man para com isso');
+  const organzArray = () => {
+    switch(order.column) {
+      case 'name':
+        if (order.sort === 'ASC') {
+          planets.sort((element, elementTwo) => {
+            return element.name < elementTwo.name ? -1 :
+              element.name > elementTwo.name ? 1 : 0;
+          });
+        } else {
+          planets.sort((element, elementTwo) => {
+            return element.name < elementTwo.name ? 1 :
+              element.name > elementTwo.name ? -1 : 0;
+          });
+        };
+        break;
+      case 'population':
+        if (order.sort === 'ASC') {
+          planets.sort((element, elementTwo) => {
+            return parseInt(element.population) < parseInt(elementTwo.population) ? -1 :
+              parseInt(element.population) > parseInt(elementTwo.population) ? 1 : 0;
+          });
+        } else {
+          planets.sort((element, elementTwo) => {
+            return parseInt(element.population) < parseInt(elementTwo.population) ? 1 :
+              parseInt(element.population) > parseInt(elementTwo.population) ? -1 : 0;
+          });
+        };
+        break;
+        case 'orbital_period':
+          if (order.sort === 'ASC') {
+            planets.sort((element, elementTwo) => {
+              return parseInt(element.orbital_period) < parseInt(elementTwo.orbital_period) ? -1 :
+                parseInt(element.orbital_period) > parseInt(elementTwo.orbital_period) ? 1 : 0;
+            });
+          } else {
+            planets.sort((element, elementTwo) => {
+              return parseInt(element.orbital_period) < parseInt(elementTwo.orbital_period) ? 1 :
+                parseInt(element.orbital_period) > parseInt(elementTwo.orbital_period) ? -1 : 0;
+            });
+          };
+          break;
+        case 'diameter':
+        if (order.sort === 'ASC') {
+          planets.sort((element, elementTwo) => {
+            return parseInt(element.diameter) < parseInt(elementTwo.diameter) ? -1 :
+              parseInt(element.diameter) > parseInt(elementTwo.diameter) ? 1 : 0;
+          });
+        } else {
+          planets.sort((element, elementTwo) => {
+            return parseInt(element.diameter) < parseInt(elementTwo.diameter) ? 1 :
+              parseInt(element.diameter) > parseInt(elementTwo.diameter) ? -1 : 0;
+          });
         }
-      });
-      setArray(arrayVar);
-    });
-  }, [array, filterByNumericValues, planets]);
+        break;
+        case 'rotation_period':
+          if (order.sort === 'ASC') {
+            planets.sort((element, elementTwo) => {
+              return parseInt(element.rotation_period) < parseInt(elementTwo.rotation_period) ? -1 :
+                parseInt(element.rotation_period) > parseInt(elementTwo.rotation_period) ? 1 : 0;
+            });
+          } else {
+            planets.sort((element, elementTwo) => {
+              return parseInt(element.rotation_period) < parseInt(elementTwo.rotation_period) ? 1 :
+                parseInt(element.rotation_period) > parseInt(elementTwo.rotation_period) ? -1 : 0;
+            });
+          }
+          break;
+        case 'surface_water':
+          if (order.sort === 'ASC') {
+            planets.sort((element, elementTwo) => {
+              return parseInt(element.surface_water) < parseInt(elementTwo.surface_water) ? -1 :
+                parseInt(element.surface_water) > parseInt(elementTwo.surface_water) ? 1 : 0;
+            });
+          } else {
+            planets.sort((element, elementTwo) => {
+              return parseInt(element.surface_water) < parseInt(elementTwo.surface_water) ? 1 :
+                parseInt(element.surface_water) > parseInt(elementTwo.surface_water) ? -1 : 0;
+            });
+          }
+          break;
+    }
+  }
+
+  organzArray();
 
   const THeadInfor = () => {
     const arrayObject = Object.keys(planets[0]);
     return arrayObject;
-  };
-
-  const bodyTablePlanets = () => {
-    if (filterByNumericValues.length === 0) {
-      return (
-        planets
-          .map((element) => (<TableBody
-            key={ element.name }
-            arrayPlanets={ element }
-          />))
-          .filter((planet) => planet.key.includes(name))
-      );
-    }
-    return (
-      array.map((infoTable) => (<TableBody
-        key={ infoTable.name }
-        arrayPlanets={ infoTable }
-      />))
-        .filter((planet) => planet.key.includes(name))
-    );
   };
 
   const bodyTable = () => (
@@ -76,7 +121,7 @@ function Table() {
         </tr>
       </thead>
       <tbody>
-        { bodyTablePlanets() }
+        <TableBodyMiddle arrayPlanets={ planets } />
       </tbody>
     </table>
   );

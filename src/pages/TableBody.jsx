@@ -5,7 +5,12 @@ function TableBody({ arrayPlanets }) {
   return (
     <tr>
       { Object.values(arrayPlanets)
-        .map((infoPlanet, index) => <td key={ index }>{ infoPlanet }</td>) }
+        .map((infoPlanet, index) => (
+        <td
+          data-testid={ infoPlanet === arrayPlanets.name ? "planet-name" : '' }
+          key={ index }>
+            { infoPlanet }
+        </td> )) }
     </tr>
   );
 }

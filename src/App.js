@@ -15,6 +15,9 @@ function App() {
   const [inputMaiorMenorIgual, setInputMaiorMenorIgual] = useState('maior que');
   const [inputNumber, setInputNumber] = useState('0');
   const [filterByNumbers, setFilterByNumbers] = useState([]);
+  const [columSort, setColumSort] = useState('name');
+  const [asdDesc, setAscDesc] = useState('ASC');
+  const [objSort, setObjSort] = useState({ column: columSort, sort: asdDesc });
   const [copyArrayFiltros, setCopyArrayFiltros] = useState(arrayFiltros);
 
   const handleInputs = ({ target }) => {
@@ -31,6 +34,15 @@ function App() {
       break;
     case 'ValueNumber':
       setInputNumber(value);
+      break;
+    case 'Asc':
+      setAscDesc(value);
+      break;
+    case 'Desc':
+      setAscDesc(value);
+      break;
+    case 'modfiSort':
+      setColumSort(value);
       break;
     default:
       console.error('FAZ ISSO N DOIDO');
@@ -103,6 +115,10 @@ function App() {
     setCopyArrayFiltros([...copyArrayFiltros, elementToBeRemoved]);
   };
 
+  const onClickSort = () => {
+    setObjSort({ column: columSort, sort: asdDesc });
+  }
+
   const bodySelectNumber = () => (
     <form>
       { selectFilter() }
@@ -159,7 +175,7 @@ function App() {
           onClick={ onClickRemove }
           type="button"
         >
-          Uma palavra de test
+          X
         </button>
       </form>
     )));
@@ -170,6 +186,7 @@ function App() {
         name: inputNamePlanet,
       },
       filterByNumericValues: filterByNumbers,
+      order: objSort,
     },
   };
 
@@ -185,6 +202,25 @@ function App() {
       />
       { filterByNumbers.length === 0 ? '' : oldSelects() }
       { bodySelectNumber() }
+      <select data-testid='column-sort' id="modfiSort" onChange={ handleInputs }>
+        <option value="name">name</option>
+        { arrayFiltros.map((element) => (
+        <option
+          key={ element }
+          value={ element }
+        >
+          { element }
+        </option>)) }
+      </select>
+      <label htmlFor="Asc">
+        Ascendente
+        <input data-testid='column-sort-input-asc' onClick={ handleInputs } id="Asc" value="ASC" type="radio" name="ascdsc" defaultChecked={ true }/>
+      </label>
+      <label htmlFor="Desc">
+        Descendente
+        <input data-testid="column-sort-input-desc" onClick={ handleInputs } id="Desc" value="DESC" type="radio" name="ascdsc"/>
+      </label>
+      <button data-testid='column-sort-button' data-testid='column-sort-button' onClick={ onClickSort }>Ordernar!</button>
       <Table />
     </MyContext.Provider>
   );
